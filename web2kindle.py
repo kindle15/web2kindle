@@ -13,6 +13,15 @@ from email.mime.base import MIMEBase
 
 NAVER_SMTP = "smtp.naver.com"
 NAVER_SMTP_PORT = 587
+NAVER_SUFFIX = "@naver.com"
+
+DAUM_SMTP = "smtp.daum.net"
+DAUM_SMTP_PORT = 465
+DAUM_SUFFIX = "@hanmail.net"
+
+GMAIL_SMTP = "smtp.gmail.com"
+GMAIL_SMTP_PORT = 465
+GMAIL_SUFFIX = "@gmail.com"
 
 # store the webpage in a byte variable
 def html2pdf(url):
@@ -68,19 +77,29 @@ def send_pdf_to_kindle(server, sender, receiver):
 def main():
 	# initialize configurations for sending email
 	while True:
-		email_provider = input("어떤 이메일을 사용할까요? 1. 네이버 2. 구글 지메일")
+		email_provider = input("어떤 이메일을 사용할까요? 1. 네이버 2. 다음 한메일 3. 구글 지메일")
 		if email_provider == '1':
 			smtp_server = NAVER_SMTP
 			smtp_port = NAVER_SMTP_PORT
+			smtp_suffix = NAVER_SUFFIX
 			break
 		elif email_provider == '2':
-			print ("지원되지 않는 이메일입니다.")
+			smtp_server = DAUM_SMTP
+			smtp_port = DAUM_SMTP_PORT
+			smtp_suffix = DAUM_SUFFIX
+			print("Kindle 허용 이메일에는 @hanmail.net 이메일을 추가해주세요.")
+			break
+		elif email_provider == '3':
+			smtp_server = GMAIL_SMTP
+			smtp_port = GMAIL_SMTP_PORT
+			smtp_suffix = GMAIL_SUFFIX
+			break
 		else: 
 			print("잘못 입력하셨습니다.")
 
 	server = smtplib.SMTP(smtp_server, smtp_port)
 	username = input("로그인 ID를 입력해주세요.")
-	sender_email = username + "@naver.com"
+	sender_email = username + smtp_suffix
 	password = getpass.getpass("비밀번호를 입력해주세요.")
 	server.starttls()
 	server.login(username, password)
